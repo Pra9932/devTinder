@@ -14,20 +14,43 @@ app.post("/signup",async(req,res)=>{
 
     // console.log(req.body);
 
-    const user=new User( req.body);
+//     const user=new User( req.body);
 
-    try{
-        await user.save();
-        res.send("User added Successfully");
-}catch(err){
-    res.status(400).send("Error saving the User:",err.message);
-}
+//     try{
+//         await user.save();
+//         res.send("User added Successfully");
+// }catch(err){
+//     res.status(400).send("Error saving the User:",err.message);
+// }
     
     //creating new instance of User model
     // const user=new User(userObj);
 });
 
+//Get user by email
+app.get("/user",async (req,res)=>{
+    const userEmail=req.body.emailId;
 
+    
+    try{
+        const user=await  User.find({emailId:userEmail});
+        res.send(user);
+    }catch(err){
+        res.status(400).send("Something Went Wrong:");
+    }
+   
+
+})
+
+app.get("/feed",async (req,res)=>{
+    
+    try{
+        const users=await  User.find({});
+        res.send(users);
+    }catch(err){
+        res.status(400).send("Something Went Wrong:");
+    }
+})
 
 connectDB().then(()=>{
     console.log("database Connection successfully....");
