@@ -14,17 +14,39 @@ app.post("/signup",async(req,res)=>{
 
     // console.log(req.body);
 
-//     const user=new User( req.body);
+    const user=new User( req.body);
 
-//     try{
-//         await user.save();
-//         res.send("User added Successfully");
-// }catch(err){
-//     res.status(400).send("Error saving the User:",err.message);
-// }
+    try{
+        await user.save();
+        res.send("User added Successfully");
+}catch(err){
+    res.status(400).send("Error saving the User:",err.message);
+}
     
     //creating new instance of User model
-    // const user=new User(userObj);
+    //const user=new User(userObj);
+
+           
+            //creating a new instance of the user model
+            //  const user=new User({
+            //     firstName:"MS",
+            //     lastName:"Dhoni",
+            //     emailId:"msDhoni@kohli.com",
+            //     password:"Dhoni@1234"
+
+            // });
+
+            // try{
+            //     await user.save();
+            //     res.send("user added successfully");
+            // }catch(err){
+            //     res.status(400).send("Error the user"+err.message);
+            // }
+            
+
+
+
+
 });
 
 //Get user by email
