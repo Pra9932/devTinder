@@ -72,7 +72,24 @@ app.get("/feed",async (req,res)=>{
     }catch(err){
         res.status(400).send("Something Went Wrong:");
     }
-})
+});
+
+app.patch("/user",async(req,res)=>{
+    const userId=req.body.userId;
+    const data=req.body;
+    try{
+        const user=await User.findByIdAndUpdate({_id:userId},data,{
+            returnDocument:"After",
+            runValidators:true,
+        });
+
+        console.log(user);
+        res.send("User updated successfully");
+
+    }catch(err){
+        res.status(400).send("something went wrong!!!!!",+err.message);
+    }
+});
 
 connectDB().then(()=>{
     console.log("database Connection successfully....");
