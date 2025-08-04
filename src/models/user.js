@@ -7,7 +7,7 @@ const userSchema=mongoose.Schema({
         type:String,
         required:true,
         minLength:4,
-        maLength:50,
+        maxLength:50,
     },
     lastName:{
         type:String
