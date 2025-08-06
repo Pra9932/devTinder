@@ -9,6 +9,13 @@ const User=require("./models/user");
 const {validateSignUpData}=require("./utils/validation");
 const bcrypt=require("bcrypt");
 
+const cookieParser=require("cookie-parser");
+
+const jwt=require("jsonwebtoken");
+const {userAuth} =require("./middleware/auth");
+
+app.use(cookieParser());
+
 app.use(express.json());
 
 app.post("/signup",async(req,res)=>{
@@ -66,6 +73,7 @@ app.post("/signup",async(req,res)=>{
 
 });
 
+
 app.post("/login",async(req,res)=>{
 
 
@@ -74,20 +82,51 @@ app.post("/login",async(req,res)=>{
         const user=await User.findOne({emailId:emailId});
         if(!user){
             // throw new Error("Email Id is not present in DB:");
-             throw new Error("Invalid credentials!!!");
+             throw new Error("Invalid credentials Email!!!");
         }
-        const  isPasswordValid=await bcrypt.compare(password,user.password);
+        const  isPasswordValid=await user.validatePassword(password);
         if(isPasswordValid){
+
+            //create a jwt token
+
+           const token=await user.getJwt();
+
+             // add the token to cookie and send the response back to the user
+             res.cookie("token",token,{
+                expires:new Date(Date.now()+8*3600000),
+             });
+
             res.send("login sucessfully!!!");
         }else{
             // throw new Error("id not valid!!");
-             throw new Error("Invalid credentials!!!");
+             throw new Error("Invalid credentials p!!!");
         }
 }catch(err){
     res.status(400).send("ERROR:"+err.message);
 }
 
 });
+
+app.get("/profile",userAuth,async(req,res)=>{
+    
+    try{
+       const user=req.User;
+       if(!user){
+        throw new Error("User does not exist");
+       }
+        res.send(user);}catch(err){
+    res.status(400).send("ERROR:"+err.message);
+        }
+
+});
+app.post("/sendConnectionRequest",userAuth,async(req,res)=>{
+    
+    const user=req.User;
+       console.log("Sending the connection Request");
+       res.send(User.firstName+"+Send the connection request");
+
+});
+ 
 
 
 //Get user by email
